@@ -4,31 +4,13 @@
 #Imports
 #########
 import serial as ser			#imports pySerial for comm with LCD
-#import RPi.GPIO_NP as GPIO		#imports RPi.GPIO_NP to talk with GPIO pins
+#import RPi.GPIO as GPIO		#imports RPi.GPIO_NP to talk with GPIO pins
 currentForm = 0					#global variable that should follow the current LCD screen form
 										#Make sure to keep track of this value as it will change
 										#between fucntions
 
 ############################# FUNCTION - DEFINITIONS ################################
-def boot_sequence():
-	"""
-		Anything that the NanoPi will need to initialize
-		before proper function of the device
-	"""
-	GPIO.setmode(GPIO.BOARD)
-	pin_declarations()
-	
-def network_detect():
-	"""
-		All network detection functionality using helper
-		functions, user input, and serial talk to the display
-	"""
-def rf_detect():
-	"""
-		This is where the GNU Radio code goes
-		Should be copy paste, but will see about
-		importing as class later
-	"""
+
 #############################
 # Helper Functions For Modes
 #############################
@@ -43,8 +25,43 @@ def change_form(form): 			#Allows change of global variable "change_form" withou
 	currentForm = form
 	return None
 	
-def pin_declarations():
-	GPIO.setup()
+##############################
+# Critical Functions For User
+##############################
+def boot_sequence():
+	"""
+		Anything that the NanoPi will need to initialize
+		before proper function of the device
+	"""
+	GPIO.setwarnings(False)
+	GPIO.setmode(GPIO.BOARD)							#Sets numbering scheme for pin #'s
+	GPIO.setup(1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)	#Initializes pin input and it's pullup/down
+	GPIO.setup(1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+	GPIO.setup(1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+	GPIO.setup(1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+	GPIO.setup(1, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
+	GPIO.setup(1, GPIO.OUT)								#Initializes pin output
+	GPIO.setup(1, GPIO.OUT)
+	GPIO.setup(1, GPIO.OUT)
+	GPIO.setup(1, GPIO.OUT)
+	GPIO.setup(1, GPIO.OUT)
+	GPIO.output(1, GPIO.HIGH)							#Sets level of output pins; 3.3V or 0V
+	GPIO.output(1, GPIO.HIGH)
+	GPIO.output(1, GPIO.HIGH)
+	GPIO.output(1, GPIO.HIGH)
+	GPIO.output(1, GPIO.HIGH)
+	
+def network_detect():
+	"""
+		All network detection functionality using helper
+		functions, user input, and serial talk to the display
+	"""
+def rf_detect():
+	"""
+		This is where the GNU Radio code goes
+		Should be copy paste, but will see about
+		importing as class later
+	"""
 	
 #################################### MAIN FUNCTION ##################################
 
