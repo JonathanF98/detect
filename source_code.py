@@ -1,49 +1,49 @@
-#Possible shebang would go here
+# Possible shebang would go here
 
 ############################# IMPORTS & GLOBALS ################################
 import subprocess
-import serial			          #imports pySerial for comm with LCD
-import RPi.GPIO as GPIO		#imports RPi.GPIO_NP to talk with GPIO pins
+import serial			          # imports pySerial for comm with LCD
+import RPi.GPIO as GPIO		# imports RPi.GPIO_NP to talk with GPIO pins
 import time
 ser = serial.Serial('/dev/ttyS1', 115200)
-currentForm = 0					    #global variable that should follow the current LCD screen form
-													#Make sure to keep track of this value as it will change
-													#between functions
+currentForm = 0					    # global variable that should follow the current LCD screen form
+													# Make sure to keep track of this value as it will change
+													# between functions
 
-#FORM 1 INDEXES
-FORM_1_INDEX			= bytearray(b'\x01')			#replace "index with hex code such as 00,01,1B, ETC."
-NETWORK_DETECT_LED	 	= bytearray(b'\x00')
+# FORM 1 INDEXES
+FORM_1_INDEX			= bytearray(b'\x01')			# replace "index with hex code such as 00,01,1B, ETC."
+NETWORK_DETECT_LED		= bytearray(b'\x00')
 RF_DETECT_LED 			= bytearray(b'\x01')
 FORM1_EXIT_LED 		  	= bytearray(b'\x02')
-#FORM 2 INDEXES
+# FORM 2 INDEXES
 FORM_2_INDEX			= bytearray(b'\x02')
 NETWORK_STRING_0		= bytearray(b'\x00')
 NETWORK_STRING_1	  	= bytearray(b'\x01')
 NETWORK_STRING_2		= bytearray(b'\x02')
 NETWORK_STRING_3		= bytearray(b'\x03')
 NETWORK_STRING_4		= bytearray(b'\x04')
-NETWORK_LED_0		    = bytearray(b'\x03')
-NETWORK_LED_1	    	= bytearray(b'\x04')
-NETWORK_LED_2	  	  	= bytearray(b'\x05')
+NETWORK_LED_0			= bytearray(b'\x03')
+NETWORK_LED_1			= bytearray(b'\x04')
+NETWORK_LED_2			= bytearray(b'\x05')
 NETWORK_LED_3			= bytearray(b'\x06')
-NETWORK_LED_4		    = bytearray(b'\x07')
-#FORM 3 INDEXES
+NETWORK_LED_4			= bytearray(b'\x07')
+# FORM 3 INDEXES
 FORM_3_INDEX			= bytearray(b'\x03')
-ENTER_KEY_LED	    	= bytearray(b'\x14')
-KEYPAD_LED_0	    	= bytearray(b'\x08')
-KEYPAD_LED_1	  	  	= bytearray(b'\x09')
-KEYPAD_LED_2		    = bytearray(b'\x0A')
-KEYPAD_LED_3		    = bytearray(b'\x0B')
-KEYPAD_LED_4		    = bytearray(b'\x0C')
-KEYPAD_LED_5	    	= bytearray(b'\x0D')
-KEYPAD_LED_6	  	  	= bytearray(b'\x0E')
-KEYPAD_LED_7		    = bytearray(b'\x0F')
-KEYPAD_LED_8		    = bytearray(b'\x10')
-KEYPAD_LED_9		    = bytearray(b'\x11')
-KEYPAD_LED_10		  	= bytearray(b'\x12')
+ENTER_KEY_LED			= bytearray(b'\x14')
+KEYPAD_LED_0			= bytearray(b'\x08')
+KEYPAD_LED_1			= bytearray(b'\x09')
+KEYPAD_LED_2			= bytearray(b'\x0A')
+KEYPAD_LED_3			= bytearray(b'\x0B')
+KEYPAD_LED_4			= bytearray(b'\x0C')
+KEYPAD_LED_5			= bytearray(b'\x0D')
+KEYPAD_LED_6			= bytearray(b'\x0E')
+KEYPAD_LED_7			= bytearray(b'\x0F')
+KEYPAD_LED_8			= bytearray(b'\x10')
+KEYPAD_LED_9			= bytearray(b'\x11')
+KEYPAD_LED_10			= bytearray(b'\x12')
 KEYPAD_LED_11			= bytearray(b'\x13')
-PASSWORD_STRING		  	= bytearray(b'\x05')
-#FORM 4 INDEXES
+PASSWORD_STRING			= bytearray(b'\x05')
+# FORM 4 INDEXES
 FORM_4_INDEX			= bytearray(b'\x04')
 MAC_ADDRESS_STRING_0	= bytearray(b'\x06')
 DEVICE_STRING_0			= bytearray(b'\x07')
@@ -51,9 +51,9 @@ MAC_ADDRESS_STRING_1	= bytearray(b'\x08')
 DEVICE_STRING_1			= bytearray(b'\x09')
 MAC_ADDRESS_STRING_2	= bytearray(b'\x0A')
 DEVICE_STRING_2			= bytearray(b'\x0B')
-NEXT_FORM_LED_0 		= bytearray(b'\x15')
+NEXT_FORM_LED_0			= bytearray(b'\x15')
 
-#FORM 5 INDEXES
+# FORM 5 INDEXES
 FORM_5_INDEX			= bytearray(b'\x05')
 MAC_ADDRESS_STRING_3	= bytearray(b'\x0C')
 DEVICE_STRING_3			= bytearray(b'\x0D')
@@ -63,7 +63,7 @@ MAC_ADDRESS_STRING_5	= bytearray(b'\x10')
 DEVICE_STRING_5			= bytearray(b'\x11')
 NEXT_FORM_LED_1 		= bytearray(b'\x16')
 
-#FORM 6 INDEXES
+# FORM 6 INDEXES
 FORM_6_INDEX			= bytearray(b'\x06')
 MAC_ADDRESS_STRING_6	= bytearray(b'\x12')
 DEVICE_STRING_6			= bytearray(b'\x13')
@@ -71,15 +71,15 @@ MAC_ADDRESS_STRING_7	= bytearray(b'\x14')
 DEVICE_STRING_7			= bytearray(b'\x15')
 MAC_ADDRESS_STRING_8	= bytearray(b'\x16')
 DEVICE_STRING_8			= bytearray(b'\x17')
-NEXT_FORM_LED_2 		= bytearray(b'\x17')
+NEXT_FORM_LED_2			= bytearray(b'\x17')
 
-#FORM 7 INDEXES
+# FORM 7 INDEXES
 FORM_7_INDEX			= bytearray(b'\x07')
 PROXIMITY_LED_0			= bytearray(b'\x18')
 PROXIMITY_LED_1			= bytearray(b'\x19')
 PROXIMITY_LED_2			= bytearray(b'\x1A')
 PROXIMITY_LED_3			= bytearray(b'\x1B')
-LED_DIGITS_0 			= bytearray(b'\x00')
+LED_DIGITS_0			= bytearray(b'\x00')
 ELIPSES_STRING			= bytearray(b'\x18')
 
 ############################# FUNCTION - DEFINITIONS ################################
