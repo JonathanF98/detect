@@ -1,7 +1,7 @@
 # Possible shebang would go here
 
 ############################# IMPORTS & GLOBALS ################################
-import subprocess
+import subprocess as sp
 import serial			          # imports pySerial for comm with LCD
 import RPi.GPIO as GPIO		# imports RPi.GPIO_NP to talk with GPIO pins
 import time
@@ -156,6 +156,21 @@ def led_off(LED):
 	ser.write(command)
 
 
+def default_keypad_state():
+	led_off(KEYPAD_LED_0)
+	led_off(KEYPAD_LED_1)
+	led_off(KEYPAD_LED_2)
+	led_off(KEYPAD_LED_3)
+	led_off(KEYPAD_LED_4)
+	led_off(KEYPAD_LED_5)
+	led_off(KEYPAD_LED_6)
+	led_off(KEYPAD_LED_7)
+	led_off(KEYPAD_LED_8)
+	led_off(KEYPAD_LED_9)
+	led_off(KEYPAD_LED_10)
+	led_off(KEYPAD_LED_11)
+
+
 # changing digits
 # def change_dig(value):
 # 	command = bytearray(b'\x01\x0F\x00')
@@ -202,6 +217,8 @@ def change_form(form): 			# Allows change of global variable "currentForm" witho
 #############################
 # Selection Matrix Functions
 #############################
+
+
 def user_mode_select():
 	mode = 0
 	led_on(NETWORK_DETECT_LED)
@@ -227,6 +244,7 @@ def user_mode_select():
 	led_off(LED_DICT[mode])
 	return mode
 
+
 def network_select():
 	mode = 0
 	led_on(NETWORK_LED_0)
@@ -239,9 +257,19 @@ def network_select():
 		4: NETWORK_LED_4
 		}
 
-	# wifi scan code would go here
+	output = sp.check_output(['nmcli', '-f', 'SSID', '-t', 'device', 'wifi'])
+	output_string = output.decode()
+	output_list = output_string.split("\n")
+	SSID_list = []
+	for x in output_list:
+		if (x != "--"):
+			SSID_list.append(x)
 
-	ssid = []
+	change_string(NETWORK_STRING_0, SSID_list[0])
+	change_string(NETWORK_STRING_1, SSID_list[1])
+	change_string(NETWORK_STRING_2, SSID_list[2])
+	change_string(NETWORK_STRING_3, SSID_list[3])
+	change_string(NETWORK_STRING_4, SSID_list[4])
 
 	while(1):
 		if(down_button_pressed() and (mode != 4)):
@@ -256,11 +284,14 @@ def network_select():
 		elif(ok_button_pressed()):
 			break
 	led_off(NETWORK_DICT[mode])
-	return ssid
+	return SSID_list[mode]
 
 
 def keypad_selection():
 	count = 0
+	passcode = ""
+	change_string(PASSWORD_STRING, passcode)
+	default_keypad_state()
 	led_on(ENTER_KEY_LED)
 
 	KEYPAD_LED_DICT = {
@@ -292,37 +323,34 @@ def keypad_selection():
 		24: KEYPAD_LED_11
 		}
 
+# 				Zero and Thirteen reserved for Enter
 	keypad = {	1: '!@#$1', 2: 'abc2', 3: 'def3',
 				4: 'ghi4',  5: 'jkl5', 6: 'mnop6',
 				7: 'qrs7',  8: 'tuv8', 9: 'wxyz9',
-				10:'shift', 11: '0 ' , 12: 'clear',
+				10:'shift', 11: '0 ',  12: 'clear',
 
-				13: '!@#$', 14: 'ABC2', 15: 'DEF3',
-				16: 'GHI4', 17: 'JKL5', 18: 'MNOP6',
-				19: 'QRS7', 20: 'TUV8', 21: 'WXYZ9',
-				22: 'shift', 23: '0 ',   24: 'clear'
+				14: '!@#$', 15: 'ABC2', 16: 'DEF3',
+				17: 'GHI4', 18: 'JKL5', 19: 'MNOP6',
+				20: 'QRS7', 21: 'TUV8', 22: 'WXYZ9',
+				23: 'shift', 24: '0 ',  25: 'clear'
 				}
-
-	passcode = ""
-	secrets = ""
-	shift_val = 0
 
 	while(1):
 		if(ok_button_pressed() and (count == 10)):                 # lower ==> upper
-			count += 12
+			count += 13
 
-		elif(ok_button_pressed() and (count == 22)):                # upper ==> lower
-			count -= 12
+		elif(ok_button_pressed() and (count == 23)):                # upper ==> lower
+			count -= 13
 
-		elif(ok_button_pressed() and (count == 12)):                # clear
+		elif(ok_button_pressed() and ((count == 12) or (count == 25))):   # clear
 			passcode = passcode[:-1]
 			change_string(PASSWORD_STRING, passcode)
 
-		elif(ok_button_pressed() and (count == 24)):                # clear
-			passcode = passcode[:-1]
-			change_string(PASSWORD_STRING, passcode)
+		elif(ok_button_pressed() and ((count == 0) or (count == 13))):
+			led_off(KEYPAD_LED_DICT[count])
+			return passcode
 
-		elif(ok_button_pressed() and (count != 0)):
+		elif(ok_button_pressed()):
 			pad_string = keypad[count]
 			passcode = passcode + pad_string[0]
 			change_string(PASSWORD_STRING, passcode)
@@ -340,25 +368,22 @@ def keypad_selection():
 					passcode = passcode + pad_string[change_char_index]
 					change_string(PASSWORD_STRING, passcode)
 
-		elif(ok_button_pressed() and (count == 0)):
-			return passcode
-
-		elif(up_button_pressed() and (count not in [0,1,2,3,13,14,15])):
+		elif(up_button_pressed() and (count not in [0,1,2,3,13,14,15,16])):
 			led_off(KEYPAD_LED_DICT[count])
 			count -= 3
 			led_on(KEYPAD_LED_DICT[count])
 
-		elif(down_button_pressed() and (count not in [0,10,11,12,22,23,24])):
+		elif(down_button_pressed() and (count not in [0,10,11,12,13,23,24,25])):
 			led_off(KEYPAD_LED_DICT[count])
 			count += 3
 			led_on(KEYPAD_LED_DICT[count])
 
-		elif(left_button_pressed() and (count not in [0,1,4,7,10,13,16,19,22])):
+		elif(left_button_pressed() and (count not in [0,4,7,10,13,17,20,23])):
 			led_off(KEYPAD_LED_DICT[count])
 			count -= 1
 			led_on(KEYPAD_LED_DICT[count])
 
-		elif(right_button_pressed() and (count not in [3,6,9,12,15,18,21,24])):
+		elif(right_button_pressed() and (count not in [3,6,9,12,16,19,22,25])):
 			led_off(KEYPAD_LED_DICT[count])
 			count += 1
 			led_on(KEYPAD_LED_DICT[count])
@@ -392,12 +417,26 @@ def boot_sequence():
 	GPIO.output(2, GPIO.HIGH)
 
 
-def network_scan():
-	"""
-		All network detection functionality using helper
-		functions, user input, and serial talk to the display
-	"""
-	password = keypad_selection()
+def network_scan(network, password):
+	sp.call(['nmcli', 'dev', 'wifi', 'connect', network, 'password', password, 'ifname', 'wlan0'])
+
+	net_f = open("connect.txt", "w")
+
+	sp.call(['nmcli', 'dev'], stdout=net_f)
+	state = sp.check_output(['awk', 'FNR == 2 {print $3}', 'connect.txt'])
+	connection = sp.check_output(['awk', 'FNR == 2 {print $4}', 'connect.txt'])
+
+	state_string = state.decode()
+	connection_string = connection.decode()
+	connection_string = connection_string.rstrip()
+
+	if((state_string == "connected\n") and (connection_string == network)):
+		#nmap
+
+		return 0
+	else:
+		#retry password input
+		return 1
 
 def rf_detect():
 	"""
@@ -433,11 +472,17 @@ while(1):
 	change_form(1)
 	modeSelection = user_mode_select()
 	if(modeSelection == 0):
-		change_form(2)
-		userNetwork = network_select()
-		change_form(3)
-		password = keypad_selection()
-		network_scan(userNetwork, password)
+		while(1):
+			change_form(2)
+			userNetwork = network_select()
+			change_form(3)
+			password = keypad_selection()
+			net_exit_status = network_scan(userNetwork, password)
+			if(net_exit_status == 1):
+				continue
+			else:
+				break
+
 
 	elif(modeSelection == 1):
 		change_form(7)
