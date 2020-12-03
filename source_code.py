@@ -145,6 +145,8 @@ def led_on(LED):
 	CHKSUM = generate_CHKSUM(command)
 	command.append(CHKSUM)
 	ser.write(command)
+	response = ser.read()
+	print(response)
 
 
 def led_off(LED):
@@ -154,6 +156,8 @@ def led_off(LED):
 	CHKSUM = generate_CHKSUM(command)
 	command.append(CHKSUM)
 	ser.write(command)
+	response = ser.read()
+	print(response)
 
 
 def default_keypad_state():
@@ -202,6 +206,8 @@ def change_string(index, message):
 	command.extend(message.encode("ascii"))
 	command.append(generate_CHKSUM(command))
 	ser.write(command)
+	response = ser.read()
+	print(response)
 
 
 def change_form(form): 			# Allows change of global variable "currentForm" without keyword
@@ -333,7 +339,7 @@ def keypad_selection():
 	count = 0
 	passcode = ""
 	change_string(PASSWORD_STRING, passcode)
-	default_keypad_state()
+	#default_keypad_state()
 	led_on(ENTER_KEY_LED)
 
 	KEYPAD_LED_DICT = {
