@@ -171,6 +171,20 @@ def default_keypad_state():
 	led_off(KEYPAD_LED_11)
 
 
+def default_mode_state():
+	led_off(NETWORK_DETECT_LED)
+	led_off(RF_DETECT_LED)
+	led_off(FORM1_EXIT_LED)
+
+
+def default_network_state():
+	led_off(NETWORK_LED_0)
+	led_off(NETWORK_LED_1)
+	led_off(NETWORK_LED_2)
+	led_off(NETWORK_LED_3)
+	led_off(NETWORK_LED_4)
+
+
 # changing digits
 # def change_dig(value):
 # 	command = bytearray(b'\x01\x0F\x00')
@@ -212,6 +226,7 @@ def change_form(form): 			# Allows change of global variable "currentForm" witho
 	CHKSUM = generate_CHKSUM(command)
 	command.append(CHKSUM)
 	ser.write(command)
+	print("form ==> ", form)
 	return None
 	
 #############################
@@ -220,7 +235,10 @@ def change_form(form): 			# Allows change of global variable "currentForm" witho
 
 
 def user_mode_select():
+	print("entered user mode select")
+	print("waiting user selection . . .")
 	mode = 0
+	default_mode_state()
 	led_on(NETWORK_DETECT_LED)
 
 	LED_DICT = {
@@ -230,23 +248,27 @@ def user_mode_select():
 		}
 
 	while(1):
-		if(right_button_pressed() and (mode != 2)):
+		if(down_button_pressed() and (mode != 2)):
 			led_off(LED_DICT[mode])
 			mode += 1
 			led_on(LED_DICT[mode])
 
-		elif(left_button_pressed() and (mode != 0)):
+		elif(up_button_pressed() and (mode != 0)):
 			led_off(LED_DICT[mode])
 			mode -= 1
 			led_on(LED_DICT[mode])
 		elif(ok_button_pressed()):
 			break
 	led_off(LED_DICT[mode])
+	print("exited user mode select")
 	return mode
 
 
 def network_select():
+	print("network select entered")
+	print("waiting user selection . . .")
 	mode = 0
+	default_network_state()
 	led_on(NETWORK_LED_0)
 
 	NETWORK_DICT = {
@@ -284,10 +306,13 @@ def network_select():
 		elif(ok_button_pressed()):
 			break
 	led_off(NETWORK_DICT[mode])
+	print("exited network select mode")
 	return SSID_list[mode]
 
 
 def keypad_selection():
+	print("entered keypad selection")
+	print("waiting user password . . .")
 	count = 0
 	passcode = ""
 	change_string(PASSWORD_STRING, passcode)
@@ -338,19 +363,22 @@ def keypad_selection():
 	while(1):
 		if(ok_button_pressed() and (count == 10)):                 # lower ==> upper
 			count += 13
-
+			print("user shift up")
 		elif(ok_button_pressed() and (count == 23)):                # upper ==> lower
 			count -= 13
+			print("user shift down")
 
 		elif(ok_button_pressed() and ((count == 12) or (count == 25))):   # clear
 			passcode = passcode[:-1]
 			change_string(PASSWORD_STRING, passcode)
-
+			print("user backspace")
 		elif(ok_button_pressed() and ((count == 0) or (count == 13))):
 			led_off(KEYPAD_LED_DICT[count])
+			print("exiting keypad selection mode")
 			return passcode
 
 		elif(ok_button_pressed()):
+			print ("user made selection")
 			pad_string = keypad[count]
 			passcode = passcode + pad_string[0]
 			change_string(PASSWORD_STRING, passcode)
@@ -359,7 +387,9 @@ def keypad_selection():
 
 			t_end = time.time() + 6
 			while(time.time() < t_end):
+				print("time loop entered")
 				if(ok_button_pressed()):
+					print("user cycle through array")
 					if(change_char_index == (len(pad_string)-1)):
 						change_char_index = 0
 					else:
@@ -367,26 +397,36 @@ def keypad_selection():
 					passcode = passcode[:-1]
 					passcode = passcode + pad_string[change_char_index]
 					change_string(PASSWORD_STRING, passcode)
-
-		elif(up_button_pressed() and (count not in [0,1,2,3,13,14,15,16])):
+		elif (down_button_pressed() and (count not in [12,25])):
+			print("down button pressed")
 			led_off(KEYPAD_LED_DICT[count])
-			count -= 3
+			count += 1
 			led_on(KEYPAD_LED_DICT[count])
-
-		elif(down_button_pressed() and (count not in [0,10,11,12,13,23,24,25])):
-			led_off(KEYPAD_LED_DICT[count])
-			count += 3
-			led_on(KEYPAD_LED_DICT[count])
-
-		elif(left_button_pressed() and (count not in [0,4,7,10,13,17,20,23])):
+		elif (up_button_pressed() and (count not in [0,13])):
+			print("up button pressed")
 			led_off(KEYPAD_LED_DICT[count])
 			count -= 1
 			led_on(KEYPAD_LED_DICT[count])
 
-		elif(right_button_pressed() and (count not in [3,6,9,12,16,19,22,25])):
-			led_off(KEYPAD_LED_DICT[count])
-			count += 1
-			led_on(KEYPAD_LED_DICT[count])
+		# elif(up_button_pressed() and (count not in [0,1,2,3,13,14,15,16])):
+		# 	led_off(KEYPAD_LED_DICT[count])
+		# 	count -= 3
+		# 	led_on(KEYPAD_LED_DICT[count])
+		#
+		# elif(down_button_pressed() and (count not in [0,10,11,12,13,23,24,25])):
+		# 	led_off(KEYPAD_LED_DICT[count])
+		# 	count += 3
+		# 	led_on(KEYPAD_LED_DICT[count])
+		#
+		# elif(left_button_pressed() and (count not in [0,4,7,10,13,17,20,23])):
+		# 	led_off(KEYPAD_LED_DICT[count])
+		# 	count -= 1
+		# 	led_on(KEYPAD_LED_DICT[count])
+		#
+		# elif(right_button_pressed() and (count not in [3,6,9,12,16,19,22,25])):
+		# 	led_off(KEYPAD_LED_DICT[count])
+		# 	count += 1
+		# 	led_on(KEYPAD_LED_DICT[count])
 
 ##############################
 # Critical Functions For User
@@ -400,24 +440,27 @@ def boot_sequence():
 	"""
 	GPIO.setwarnings(False)
 	GPIO.setmode(GPIO.BOARD)							# Sets numbering scheme for pin #'s
-	GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin11 ok button     Initializes pin input and it's pullup/down
+	GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin11 ok button     Initializes pin input and it's pullup/down
 	GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin10 up button
-	GPIO.setup(14, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin14 down button
+	GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin14 down button
 	GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin18 left button
 	GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin22 right button
-	GPIO.setup(9, GPIO.OUT)	 # pin9 ok button							                        Initializes pin output
+	GPIO.setup(2, GPIO.OUT)	 # pin9 ok button							                        Initializes pin output
 	GPIO.setup(8, GPIO.OUT)	 # pin8	up button
-	GPIO.setup(12, GPIO.OUT)  # pin12 down button						  set up which pins on the nano pi we will use
+	GPIO.setup(16, GPIO.OUT)  # pin12 down button						  set up which pins on the nano pi we will use
 	GPIO.setup(16, GPIO.OUT)  # pin16 left button
 	GPIO.setup(2, GPIO.OUT)	 # pin20 right button
-	GPIO.output(9, GPIO.HIGH)							# Sets level of output pins; 3.3V or 0V
+	GPIO.output(2, GPIO.HIGH)							# Sets level of output pins; 3.3V or 0V
 	GPIO.output(8, GPIO.HIGH)
-	GPIO.output(12, GPIO.HIGH)
+	GPIO.output(16, GPIO.HIGH)
 	GPIO.output(16, GPIO.HIGH)
 	GPIO.output(2, GPIO.HIGH)
+	print("boot sequence completed")
 
 
 def network_scan(network, password):
+	print("entering network scan")
+	print("scanning network . . .")
 	sp.call(['nmcli', 'dev', 'wifi', 'connect', network, 'password', password, 'ifname', 'wlan0'])
 
 	net_f = open("connect.txt", "w")
@@ -432,10 +475,11 @@ def network_scan(network, password):
 
 	if((state_string == "connected\n") and (connection_string == network)):
 		#nmap
-
+		print("exiting network scan, status: SUCCESS")
 		return 0
 	else:
 		#retry password input
+		print("exiting network scan, status: FAILURE")
 		return 1
 
 def rf_detect():
@@ -472,6 +516,7 @@ while(1):
 	change_form(1)
 	modeSelection = user_mode_select()
 	if(modeSelection == 0):
+		print("user mode 'Network Scan' selected")
 		while(1):
 			change_form(2)
 			userNetwork = network_select()
@@ -479,9 +524,10 @@ while(1):
 			password = keypad_selection()
 			net_exit_status = network_scan(userNetwork, password)
 			if(net_exit_status == 1):
+				print("Connection Failure, boot to network select")
 				continue
-			else:
-				break
+			break
+		print("End of network select, restarting from mode select")
 
 
 	elif(modeSelection == 1):
