@@ -339,7 +339,7 @@ def keypad_selection():
 	count = 0
 	passcode = ""
 	change_string(PASSWORD_STRING, passcode)
-	#default_keypad_state()
+	default_keypad_state()
 	led_on(ENTER_KEY_LED)
 
 	KEYPAD_LED_DICT = {
@@ -373,12 +373,12 @@ def keypad_selection():
 		}
 
 # 				Zero and Thirteen reserved for Enter
-	keypad = {	1: '1!@#$', 2: 'abc2', 3: 'def3',
+	keypad = {	1: '!@#$1', 2: 'abc2', 3: 'def3',
 				4: 'ghi4',  5: 'jkl5', 6: 'mnop6',
 				7: 'qrs7',  8: 'tuv8', 9: 'wxyz9',
 				10:'shift', 11: '0 ',  12: 'clear',
 
-				14: '!@#$', 15: 'ABC2', 16: 'DEF3',
+				14: '!@#$1', 15: 'ABC2', 16: 'DEF3',
 				17: 'GHI4', 18: 'JKL5', 19: 'MNOP6',
 				20: 'QRS7', 21: 'TUV8', 22: 'WXYZ9',
 				23: 'shift', 24: '0 ',  25: 'clear'
