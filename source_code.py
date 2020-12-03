@@ -90,7 +90,7 @@ ELIPSES_STRING			= bytearray(b'\x18')
 
 
 def ok_button_pressed():
-	if GPIO.input(11):
+	if GPIO.input(4):
 		time.sleep(0.5)
 		return 1
 	else:
@@ -106,14 +106,6 @@ def up_button_pressed():
 
 
 def down_button_pressed():
-	if GPIO.input(14):
-		time.sleep(0.5)
-		return 1
-	else:
-		return 0
-
-
-def left_button_pressed():
 	if GPIO.input(18):
 		time.sleep(0.5)
 		return 1
@@ -121,12 +113,20 @@ def left_button_pressed():
 		return 0
 
 
-def right_button_pressed():
-	if GPIO.input(4):
-		time.sleep(0.5)
-		return 1
-	else:
-		return 0
+# def left_button_pressed():
+# 	if GPIO.input(18):
+# 		time.sleep(0.5)
+# 		return 1
+# 	else:
+# 		return 0
+
+
+# def right_button_pressed():
+# 	if GPIO.input(4):
+# 		time.sleep(0.5)
+# 		return 1
+# 	else:
+# 		return 0
 
 
 def generate_CHKSUM(command):
@@ -443,18 +443,18 @@ def boot_sequence():
 	GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin11 ok button     Initializes pin input and it's pullup/down
 	GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin10 up button
 	GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin14 down button
-	GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin18 left button
-	GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin22 right button
+	#GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin18 left button
+	#GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin22 right button
 	GPIO.setup(2, GPIO.OUT)	 # pin9 ok button							                        Initializes pin output
 	GPIO.setup(8, GPIO.OUT)	 # pin8	up button
 	GPIO.setup(16, GPIO.OUT)  # pin12 down button						  set up which pins on the nano pi we will use
-	GPIO.setup(16, GPIO.OUT)  # pin16 left button
-	GPIO.setup(2, GPIO.OUT)	 # pin20 right button
+	#GPIO.setup(16, GPIO.OUT)  # pin16 left button
+	#GPIO.setup(2, GPIO.OUT)	 # pin20 right button
 	GPIO.output(2, GPIO.HIGH)							# Sets level of output pins; 3.3V or 0V
 	GPIO.output(8, GPIO.HIGH)
 	GPIO.output(16, GPIO.HIGH)
-	GPIO.output(16, GPIO.HIGH)
-	GPIO.output(2, GPIO.HIGH)
+	#GPIO.output(16, GPIO.HIGH)
+	#GPIO.output(2, GPIO.HIGH)
 	print("boot sequence completed")
 
 
