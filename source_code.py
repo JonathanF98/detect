@@ -232,6 +232,8 @@ def change_form(form): 			# Allows change of global variable "currentForm" witho
 	CHKSUM = generate_CHKSUM(command)
 	command.append(CHKSUM)
 	ser.write(command)
+	response = ser.read()
+	print(response)
 	print("form ==> ", form)
 	return None
 	
