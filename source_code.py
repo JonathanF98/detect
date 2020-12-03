@@ -91,7 +91,7 @@ ELIPSES_STRING			= bytearray(b'\x18')
 
 def ok_button_pressed():
 	if GPIO.input(4):
-		time.sleep(0.5)
+		time.sleep(0.3)
 		return 1
 	else:
 		return 0
@@ -99,7 +99,7 @@ def ok_button_pressed():
 
 def up_button_pressed():
 	if GPIO.input(10):
-		time.sleep(0.5)
+		time.sleep(0.3)
 		return 1
 	else:
 		return 0
@@ -107,7 +107,7 @@ def up_button_pressed():
 
 def down_button_pressed():
 	if GPIO.input(18):
-		time.sleep(0.5)
+		time.sleep(0.3)
 		return 1
 	else:
 		return 0
@@ -115,7 +115,7 @@ def down_button_pressed():
 
 # def left_button_pressed():
 # 	if GPIO.input(18):
-# 		time.sleep(0.5)
+# 		time.sleep(0.3)
 # 		return 1
 # 	else:
 # 		return 0
@@ -123,7 +123,7 @@ def down_button_pressed():
 
 # def right_button_pressed():
 # 	if GPIO.input(4):
-# 		time.sleep(0.5)
+# 		time.sleep(0.3)
 # 		return 1
 # 	else:
 # 		return 0
@@ -378,47 +378,47 @@ def keypad_selection():
 				}
 
 	while(1):
-		if(ok_button_pressed() and (count == 10)):                 # lower ==> upper
-			count += 13
-			print("user shift up")
-		elif(ok_button_pressed() and (count == 23)):                # upper ==> lower
-			count -= 13
-			print("user shift down")
+		if(ok_button_pressed()):                 # lower ==> upper
+			if(count == 10):
+				count += 13
+				print("user shift up")
+			elif(count == 23):
+				count -= 13
+				print("user shift down")
+			elif((count == 12) or (count == 25)):
+				passcode = passcode[:-1]
+				change_string(PASSWORD_STRING, passcode)
+				print("user backspace")
+			elif((count == 0) or (count == 13)):
+				led_off(KEYPAD_LED_DICT[count])
+				print("exiting keypad selection mode")
+				return passcode
+			else:
+				print("user made selection")
+				pad_string = keypad[count]
+				passcode = passcode + pad_string[0]
+				change_string(PASSWORD_STRING, passcode)
 
-		elif(ok_button_pressed() and ((count == 12) or (count == 25))):   # clear
-			passcode = passcode[:-1]
-			change_string(PASSWORD_STRING, passcode)
-			print("user backspace")
-		elif(ok_button_pressed() and ((count == 0) or (count == 13))):
-			led_off(KEYPAD_LED_DICT[count])
-			print("exiting keypad selection mode")
-			return passcode
+				change_char_index = 0
 
-		elif(ok_button_pressed()):
-			print ("user made selection")
-			pad_string = keypad[count]
-			passcode = passcode + pad_string[0]
-			change_string(PASSWORD_STRING, passcode)
+				while (down_button_pressed() != 1):
+					print("cycle loop entered")
+					if (ok_button_pressed()):
+						print("user cycle through array")
+						if (change_char_index == (len(pad_string) - 1)):
+							change_char_index = 0
+						else:
+							change_char_index += 1
+						passcode = passcode[:-1]
+						passcode = passcode + pad_string[change_char_index]
+						change_string(PASSWORD_STRING, passcode)
 
-			change_char_index = 0
-
-			while(down_button_pressed() != 0):
-				print("cycle loop entered")
-				if(ok_button_pressed()):
-					print("user cycle through array")
-					if(change_char_index == (len(pad_string)-1)):
-						change_char_index = 0
-					else:
-						change_char_index += 1
-					passcode = passcode[:-1]
-					passcode = passcode + pad_string[change_char_index]
-					change_string(PASSWORD_STRING, passcode)
-		elif (down_button_pressed() and (count not in [12,25])):
+		if (down_button_pressed() and (count not in [12,25])):
 			print("down button pressed")
 			led_off(KEYPAD_LED_DICT[count])
 			count += 1
 			led_on(KEYPAD_LED_DICT[count])
-		elif (up_button_pressed() and (count not in [0,13])):
+		if (up_button_pressed() and (count not in [0,13])):
 			print("up button pressed")
 			led_off(KEYPAD_LED_DICT[count])
 			count -= 1
