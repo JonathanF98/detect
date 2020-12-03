@@ -398,7 +398,7 @@ def keypad_selection():
 				pad_string = keypad[count]
 				passcode = passcode + pad_string[0]
 				change_string(PASSWORD_STRING, passcode)
-
+				time.sleep(1)
 				change_char_index = 0
 
 				while (down_button_pressed() != 1):
@@ -412,6 +412,7 @@ def keypad_selection():
 						passcode = passcode[:-1]
 						passcode = passcode + pad_string[change_char_index]
 						change_string(PASSWORD_STRING, passcode)
+						time.sleep(1)
 
 		if (down_button_pressed() and (count not in [12,25])):
 			print("down button pressed")
