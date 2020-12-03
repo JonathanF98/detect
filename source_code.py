@@ -9,7 +9,8 @@ ser = serial.Serial('/dev/ttyS1', 115200)
 currentForm = 0					    # global variable that should follow the current LCD screen form
 													# Make sure to keep track of this value as it will change
 													# between functions
-
+# FORM 0 INDEX
+FORM_0_INDEX			= bytearray(b'\x00')
 # FORM 1 INDEXES
 FORM_1_INDEX			= bytearray(b'\x01')			# replace "index with hex code such as 00,01,1B, ETC."
 NETWORK_DETECT_LED		= bytearray(b'\x00')
@@ -214,6 +215,8 @@ def change_form(form): 			# Allows change of global variable "currentForm" witho
 	global currentForm 
 	currentForm = form
 	command = bytearray(b'\x01\x0A')
+	if(form == 0):
+		command.extend(FORM_0_INDEX)
 	if(form == 1):
 		command.extend(FORM_1_INDEX)								# add in binary, more than one 1, equals 0. otherwise 1
 	elif(form == 2):
