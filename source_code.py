@@ -402,9 +402,8 @@ def keypad_selection():
 
 			change_char_index = 0
 
-			t_end = time.time() + 6
-			while(time.time() < t_end):
-				print("time loop entered")
+			while(down_button_pressed() != 0):
+				print("cycle loop entered")
 				if(ok_button_pressed()):
 					print("user cycle through array")
 					if(change_char_index == (len(pad_string)-1)):
