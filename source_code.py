@@ -561,6 +561,7 @@ while(1):
 
 	elif(modeSelection == 2):
 		change_form(0)
+		time.sleep(3)
 		sp.call(['reboot'])
 
 	# exit sequence
