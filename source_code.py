@@ -286,12 +286,29 @@ def network_select():
 	for x in output_list:
 		if (x != "--"):
 			SSID_list.append(x)
+			print("SSID appended")
+	print("Length of SSID list: ", len(SSID_list))
 
-	change_string(NETWORK_STRING_0, SSID_list[0])
-	change_string(NETWORK_STRING_1, SSID_list[1])
-	change_string(NETWORK_STRING_2, SSID_list[2])
-	change_string(NETWORK_STRING_3, SSID_list[3])
-	change_string(NETWORK_STRING_4, SSID_list[4])
+	try:
+		change_string(NETWORK_STRING_0, SSID_list[0])
+	except:
+		print("not enough SSIDs")
+	try:
+		change_string(NETWORK_STRING_1, SSID_list[1])
+	except:
+		print("not enough SSIDs")
+	try:
+		change_string(NETWORK_STRING_2, SSID_list[2])
+	except:
+		print("not enough SSIDs")
+	try:
+		change_string(NETWORK_STRING_3, SSID_list[3])
+	except:
+		print("not enough SSIDs")
+	try:
+		change_string(NETWORK_STRING_4, SSID_list[4])
+	except:
+		print("not enough SSIDs")
 
 	while(1):
 		if(down_button_pressed() and (mode != 4)):
