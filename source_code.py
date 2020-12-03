@@ -351,18 +351,19 @@ def keypad_selection():
 		11: KEYPAD_LED_10,
 		12: KEYPAD_LED_11,
 
-		13: KEYPAD_LED_0,
-		14: KEYPAD_LED_1,
-		15: KEYPAD_LED_2,
-		16: KEYPAD_LED_3,
-		17: KEYPAD_LED_4,
-		18: KEYPAD_LED_5,
-		19: KEYPAD_LED_6,
-		20: KEYPAD_LED_7,
-		21: KEYPAD_LED_8,
-		22: KEYPAD_LED_9,
-		23: KEYPAD_LED_10,
-		24: KEYPAD_LED_11
+		13: ENTER_KEY_LED,
+		14: KEYPAD_LED_0,
+		15: KEYPAD_LED_1,
+		16: KEYPAD_LED_2,
+		17: KEYPAD_LED_3,
+		18: KEYPAD_LED_4,
+		19: KEYPAD_LED_5,
+		20: KEYPAD_LED_6,
+		21: KEYPAD_LED_7,
+		22: KEYPAD_LED_8,
+		23: KEYPAD_LED_9,
+		24: KEYPAD_LED_10,
+		25: KEYPAD_LED_11
 		}
 
 # 				Zero and Thirteen reserved for Enter
@@ -412,7 +413,7 @@ def keypad_selection():
 						passcode = passcode[:-1]
 						passcode = passcode + pad_string[change_char_index]
 						change_string(PASSWORD_STRING, passcode)
-						time.sleep(1)
+						time.sleep(0.5)
 
 		if (down_button_pressed() and (count not in [12,25])):
 			print("down button pressed")
