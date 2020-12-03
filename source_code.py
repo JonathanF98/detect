@@ -373,7 +373,7 @@ def keypad_selection():
 		}
 
 # 				Zero and Thirteen reserved for Enter
-	keypad = {	1: '!@#$1', 2: 'abc2', 3: 'def3',
+	keypad = {	1: '1!@#$', 2: 'abc2', 3: 'def3',
 				4: 'ghi4',  5: 'jkl5', 6: 'mnop6',
 				7: 'qrs7',  8: 'tuv8', 9: 'wxyz9',
 				10:'shift', 11: '0 ',  12: 'clear',
