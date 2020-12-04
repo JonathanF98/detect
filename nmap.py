@@ -325,6 +325,10 @@ MAC_addresses = []
 for x in MAC_list:
     MAC_addresses.append(x[13:30])
     Devices.append(x[30:])
+
+print(MAC_addresses)
+print(Devices)
+
 for y in range(len(MAC_addresses)):
     change_string(MAC_DICT[y], MAC_addresses[y])
     change_string(DEVICE_DICT[y], Devices[y])
