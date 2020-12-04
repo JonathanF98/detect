@@ -332,7 +332,12 @@ print(Devices)
 for y in range(len(MAC_addresses)):
     change_string(MAC_DICT[y], MAC_addresses[y])
     change_string(DEVICE_DICT[y], Devices[y])
-    time.sleep(2)
+    time.sleep(3)
+    if(y == 3):
+        change_form(5)
+
+
+
 
 while (1):
     if (ok_button_pressed()):
