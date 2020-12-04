@@ -338,16 +338,4 @@ for y in range(len(MAC_addresses)):
     if(y == 5):
         change_form(6)
 
-while (1):
-    if (ok_button_pressed()):
-        break
-change_form(5)
-while (1):
-    if (ok_button_pressed()):
-        break
-change_form(6)
-while (1):
-    if (ok_button_pressed()):
-        break
-
 print("exiting network scan, status: SUCCESS")

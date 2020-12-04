@@ -502,14 +502,14 @@ def network_scan(network, password):
 				8: MAC_ADDRESS_STRING_8
 				}
 	DEVICE_DICT = { 0: DEVICE_STRING_0,
-					1: DEVICE_STRING_0,
-					2: DEVICE_STRING_0,
-					3: DEVICE_STRING_0,
-					4: DEVICE_STRING_0,
-					5: DEVICE_STRING_0,
-					6: DEVICE_STRING_0,
-					7: DEVICE_STRING_0,
-					8: DEVICE_STRING_0
+					1: DEVICE_STRING_1,
+					2: DEVICE_STRING_2,
+					3: DEVICE_STRING_3,
+					4: DEVICE_STRING_4,
+					5: DEVICE_STRING_5,
+					6: DEVICE_STRING_6,
+					7: DEVICE_STRING_7,
+					8: DEVICE_STRING_8
 					}
 
 	sp.call(['nmcli', 'dev', 'wifi', 'connect', network, 'password', password, 'ifname', 'wlan0'])
@@ -552,29 +552,19 @@ def network_scan(network, password):
 		Devices = []
 		MAC_addresses = []
 		for x in MAC_list:
-			MAC_addresses.append(x[:30])
+			MAC_addresses.append(x[13:30])
 			Devices.append(x[30:])
 
 		for y in range(len(MAC_addresses)):
+			if (y == 0):
+				change_form(4)
+			elif (y == 2):
+				change_form(5)
+			elif (y == 5):
+				change_form(6)
 			change_string(MAC_DICT[y], MAC_addresses[y])
 			change_string(DEVICE_DICT[y], Devices[y])
-
-		led_on(NEXT_FORM_LED_0)
-		led_on(NEXT_FORM_LED_1)
-		led_on(NEXT_FORM_LED_2)
-
-		change_form(4)
-		while(1):
-			if(ok_button_pressed()):
-				break
-		change_form(5)
-		while(1):
-			if(ok_button_pressed()):
-				break
-		change_form(6)
-		while(1):
-			if(ok_button_pressed()):
-				break
+			time.sleep(3)
 
 		print("exiting network scan, status: SUCCESS")
 		return 0
@@ -633,7 +623,9 @@ while(1):
 
 	elif(modeSelection == 1):
 		change_form(7)
-		rf_detect()
+		while(1):
+			if(ok_button_pressed()):
+				break
 
 
 	elif(modeSelection == 2):
