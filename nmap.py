@@ -335,7 +335,7 @@ for y in range(len(MAC_addresses)):
     time.sleep(3)
     if(y == 2):
         change_form(5)
-    if(y == 5)
+    if(y == 5):
         change_form(6)
 
 while (1):
