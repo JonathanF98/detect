@@ -490,6 +490,28 @@ def boot_sequence():
 def network_scan(network, password):
 	print("entering network scan")
 	print("scanning network . . .")
+
+	MAC_DICT = {0: MAC_ADDRESS_STRING_0,
+				1: MAC_ADDRESS_STRING_1,
+				2: MAC_ADDRESS_STRING_2,
+				3: MAC_ADDRESS_STRING_3,
+				4: MAC_ADDRESS_STRING_4,
+				5: MAC_ADDRESS_STRING_5,
+				6: MAC_ADDRESS_STRING_6,
+				7: MAC_ADDRESS_STRING_7,
+				8: MAC_ADDRESS_STRING_8
+				}
+	DEVICE_DICT = { 0: DEVICE_STRING_0,
+					1: DEVICE_STRING_0,
+					2: DEVICE_STRING_0,
+					3: DEVICE_STRING_0,
+					4: DEVICE_STRING_0,
+					5: DEVICE_STRING_0,
+					6: DEVICE_STRING_0,
+					7: DEVICE_STRING_0,
+					8: DEVICE_STRING_0
+					}
+
 	sp.call(['nmcli', 'dev', 'wifi', 'connect', network, 'password', password, 'ifname', 'wlan0'])
 
 	net_f = open("connect.txt", "w")
@@ -503,7 +525,57 @@ def network_scan(network, password):
 	connection_string = connection_string.rstrip()
 
 	if((state_string == "connected\n") and (connection_string == network)):
-		#nmap
+		nmap_f = open("nmap.txt", "w")
+		nmap_f2 = open("nmap2.txt", "w")
+		sp.call(['ip', 'a'], stdout=nmap_f)
+		sp.call(['grep', '-E', 'inet.*wlan0', 'nmap.txt'], stdout=nmap_f2)
+		ip_address = sp.check_output(['awk', '{print $2}', 'nmap2.txt'])
+		ip_string = ip_address.decode()
+		print(ip_string)
+
+		ip_string = ip_string.rstrip()
+		ip_list = ip_string.split(".")
+		print(ip_list)
+
+		boundary = ip_list[0] + '.' + ip_list[1] + '.' + ip_list[2] + '.' + '0/24'
+		print(boundary)
+
+		mac_f = open("mac.txt", "w")
+		sp.call(['sudo', 'nmap', '-sn', boundary], stdout=mac_f)
+		MAC = sp.check_output(['awk', '/MAC Address/', 'mac.txt'])
+
+		MAC_string = MAC.decode("ascii")
+		print(MAC_string)
+		MAC_list = MAC_string.split("\n")
+		print(MAC_list)
+
+		Devices = []
+		MAC_addresses = []
+		for x in MAC_list:
+			MAC_addresses.append(x[:30])
+			Devices.append(x[30:])
+
+		for y in range(len(MAC_addresses)):
+			change_string(MAC_DICT[y], MAC_addresses[y])
+			change_string(DEVICE_DICT[y], Devices[y])
+
+		led_on(NEXT_FORM_LED_0)
+		led_on(NEXT_FORM_LED_1)
+		led_on(NEXT_FORM_LED_2)
+
+		change_form(4)
+		while(1):
+			if(ok_button_pressed()):
+				break
+		change_form(5)
+		while(1):
+			if(ok_button_pressed()):
+				break
+		change_form(6)
+		while(1):
+			if(ok_button_pressed()):
+				break
+
 		print("exiting network scan, status: SUCCESS")
 		return 0
 	else:
