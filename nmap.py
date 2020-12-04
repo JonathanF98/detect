@@ -332,6 +332,7 @@ print(Devices)
 for y in range(len(MAC_addresses)):
     change_string(MAC_DICT[y], MAC_addresses[y])
     change_string(DEVICE_DICT[y], Devices[y])
+    time.sleep(1)
 
 led_on(NEXT_FORM_LED_0)
 led_on(NEXT_FORM_LED_1)
