@@ -318,4 +318,4 @@ while (1):
 		break
 
 print("exiting network scan, status: SUCCESS")
-return 0
+
