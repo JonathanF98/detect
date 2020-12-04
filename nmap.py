@@ -334,10 +334,6 @@ for y in range(len(MAC_addresses)):
     change_string(DEVICE_DICT[y], Devices[y])
     time.sleep(2)
 
-led_on(NEXT_FORM_LED_0)
-led_on(NEXT_FORM_LED_1)
-led_on(NEXT_FORM_LED_2)
-
 while (1):
     if (ok_button_pressed()):
         break
