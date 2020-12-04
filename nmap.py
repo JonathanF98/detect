@@ -286,14 +286,14 @@ MAC_DICT = {0: MAC_ADDRESS_STRING_0,
             8: MAC_ADDRESS_STRING_8
             }
 DEVICE_DICT = {0: DEVICE_STRING_0,
-               1: DEVICE_STRING_0,
-               2: DEVICE_STRING_0,
-               3: DEVICE_STRING_0,
-               4: DEVICE_STRING_0,
-               5: DEVICE_STRING_0,
-               6: DEVICE_STRING_0,
-               7: DEVICE_STRING_0,
-               8: DEVICE_STRING_0
+               1: DEVICE_STRING_1,
+               2: DEVICE_STRING_2,
+               3: DEVICE_STRING_3,
+               4: DEVICE_STRING_4,
+               5: DEVICE_STRING_5,
+               6: DEVICE_STRING_6,
+               7: DEVICE_STRING_7,
+               8: DEVICE_STRING_8
                }
 
 nmap_f = open("nmap.txt", "w")
@@ -333,7 +333,6 @@ led_on(NEXT_FORM_LED_0)
 led_on(NEXT_FORM_LED_1)
 led_on(NEXT_FORM_LED_2)
 
-change_form(4)
 while (1):
     if (ok_button_pressed()):
         break
