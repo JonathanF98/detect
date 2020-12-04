@@ -59,8 +59,8 @@ NEXT_FORM_LED_0 = bytearray(b'\x15')
 FORM_5_INDEX = bytearray(b'\x05')
 MAC_ADDRESS_STRING_3 = bytearray(b'\x0C')
 DEVICE_STRING_3 = bytearray(b'\x0D')
-MAC_ADDRESS_STRING_4 = bytearray(b'\x0E')
-DEVICE_STRING_4 = bytearray(b'\x0F')
+MAC_ADDRESS_STRING_4 = bytearray(b'\x0C')
+DEVICE_STRING_4 = bytearray(b'\x0D')
 MAC_ADDRESS_STRING_5 = bytearray(b'\x10')
 DEVICE_STRING_5 = bytearray(b'\x11')
 NEXT_FORM_LED_1 = bytearray(b'\x16')
@@ -333,11 +333,10 @@ for y in range(len(MAC_addresses)):
     change_string(MAC_DICT[y], MAC_addresses[y])
     change_string(DEVICE_DICT[y], Devices[y])
     time.sleep(3)
-    if(y == 3):
+    if(y == 2):
         change_form(5)
-
-
-
+    if(y == 5)
+        change_form(6)
 
 while (1):
     if (ok_button_pressed()):
