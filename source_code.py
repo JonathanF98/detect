@@ -114,20 +114,20 @@ def down_button_pressed():
 		return 0
 
 
-# def left_button_pressed():
-# 	if GPIO.input(18):
-# 		time.sleep(0.3)
-# 		return 1
-# 	else:
-# 		return 0
+def left_button_pressed():
+	if GPIO.input(11):
+		time.sleep(0.3)
+		return 1
+	else:
+		return 0
 
 
-# def right_button_pressed():
-# 	if GPIO.input(4):
-# 		time.sleep(0.3)
-# 		return 1
-# 	else:
-# 		return 0
+def right_button_pressed():
+	if GPIO.input(14):
+		time.sleep(0.3)
+		return 1
+	else:
+		return 0
 
 
 def generate_CHKSUM(command):
@@ -426,36 +426,36 @@ def keypad_selection():
 						change_string(PASSWORD_STRING, passcode)
 						time.sleep(0.5)
 
-		if (down_button_pressed() and (count not in [12,25])):
-			print("down button pressed")
+		# if (down_button_pressed() and (count not in [12,25])):
+		# 	print("down button pressed")
+		# 	led_off(KEYPAD_LED_DICT[count])
+		# 	count += 1
+		# 	led_on(KEYPAD_LED_DICT[count])
+		# if (up_button_pressed() and (count not in [0,13])):
+		# 	print("up button pressed")
+		# 	led_off(KEYPAD_LED_DICT[count])
+		# 	count -= 1
+		# 	led_on(KEYPAD_LED_DICT[count])
+
+		elif(up_button_pressed() and (count not in [0,1,2,3,13,14,15,16])):
 			led_off(KEYPAD_LED_DICT[count])
-			count += 1
+			count -= 3
 			led_on(KEYPAD_LED_DICT[count])
-		if (up_button_pressed() and (count not in [0,13])):
-			print("up button pressed")
+
+		elif(down_button_pressed() and (count not in [0,10,11,12,13,23,24,25])):
+			led_off(KEYPAD_LED_DICT[count])
+			count += 3
+			led_on(KEYPAD_LED_DICT[count])
+
+		elif(left_button_pressed() and (count not in [0,4,7,10,13,17,20,23])):
 			led_off(KEYPAD_LED_DICT[count])
 			count -= 1
 			led_on(KEYPAD_LED_DICT[count])
 
-		# elif(up_button_pressed() and (count not in [0,1,2,3,13,14,15,16])):
-		# 	led_off(KEYPAD_LED_DICT[count])
-		# 	count -= 3
-		# 	led_on(KEYPAD_LED_DICT[count])
-		#
-		# elif(down_button_pressed() and (count not in [0,10,11,12,13,23,24,25])):
-		# 	led_off(KEYPAD_LED_DICT[count])
-		# 	count += 3
-		# 	led_on(KEYPAD_LED_DICT[count])
-		#
-		# elif(left_button_pressed() and (count not in [0,4,7,10,13,17,20,23])):
-		# 	led_off(KEYPAD_LED_DICT[count])
-		# 	count -= 1
-		# 	led_on(KEYPAD_LED_DICT[count])
-		#
-		# elif(right_button_pressed() and (count not in [3,6,9,12,16,19,22,25])):
-		# 	led_off(KEYPAD_LED_DICT[count])
-		# 	count += 1
-		# 	led_on(KEYPAD_LED_DICT[count])
+		elif(right_button_pressed() and (count not in [3,6,9,12,16,19,22,25])):
+			led_off(KEYPAD_LED_DICT[count])
+			count += 1
+			led_on(KEYPAD_LED_DICT[count])
 
 ##############################
 # Critical Functions For User
@@ -472,18 +472,18 @@ def boot_sequence():
 	GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin11 ok button     Initializes pin input and it's pullup/down
 	GPIO.setup(10, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin10 up button
 	GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin14 down button
-	#GPIO.setup(18, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin18 left button
-	#GPIO.setup(4, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin22 right button
+	GPIO.setup(11, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin18 left button
+	GPIO.setup(14, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)   # pin22 right button
 	GPIO.setup(2, GPIO.OUT)	 # pin9 ok button							                        Initializes pin output
 	GPIO.setup(8, GPIO.OUT)	 # pin8	up button
 	GPIO.setup(16, GPIO.OUT)  # pin12 down button						  set up which pins on the nano pi we will use
-	#GPIO.setup(16, GPIO.OUT)  # pin16 left button
-	#GPIO.setup(2, GPIO.OUT)	 # pin20 right button
+	GPIO.setup(9, GPIO.OUT)  # pin16 left button
+	GPIO.setup(12, GPIO.OUT)	 # pin20 right button
 	GPIO.output(2, GPIO.HIGH)							# Sets level of output pins; 3.3V or 0V
 	GPIO.output(8, GPIO.HIGH)
 	GPIO.output(16, GPIO.HIGH)
-	#GPIO.output(16, GPIO.HIGH)
-	#GPIO.output(2, GPIO.HIGH)
+	GPIO.output(9, GPIO.HIGH)
+	GPIO.output(12, GPIO.HIGH)
 	print("boot sequence completed")
 
 
